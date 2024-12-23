@@ -1,0 +1,44 @@
+# دالة لإضافة رقمين
+def add(x, y):
+    return x + y
+
+# دالة لطرح رقمين
+def subtract(x, y):
+    return x - y
+
+# دالة لضرب رقمين
+def multiply(x, y):
+    return x * y
+
+# دالة لقسمة رقمين
+def divide(x, y):
+    if y == 0:
+        return "خطأ: القسمة على صفر غير ممكنة"
+    else:
+        return x / y
+
+# طباعة الخيارات للمستخدم
+print("الخيارات:")
+print("1. إضافة")
+print("2. طرح")
+print("3. ضرب")
+print("4. قسمة")
+
+# طلب إدخال الاختيار من المستخدم
+choice = input("أدخل الاختيار (1/2/3/4): ")
+
+# طلب الأرقام من المستخدم
+num1 = float(input("أدخل الرقم الأول: "))
+num2 = float(input("أدخل الرقم الثاني: "))
+
+# تنفيذ العملية بناءً على الاختيار
+if choice == '1':
+    print(f"النتيجة: {add(num1, num2)}")
+elif choice == '2':
+    print(f"النتيجة: {subtract(num1, num2)}")
+elif choice == '3':
+    print(f"النتيجة: {multiply(num1, num2)}")
+elif choice == '4':
+    print(f"النتيجة: {divide(num1, num2)}")
+else:
+    print("اختيار غير صحيح")

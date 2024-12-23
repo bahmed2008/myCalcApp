@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آلة حاسبة</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #A0E4FF, #FFECB3); /* خلفية مبهجة ومريحة */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .calculator {
+            background-color: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 340px; /* زيادة عرض الآلة الحاسبة لتناسب الأزرار الإضافية */
+            text-align: center;
+            position: relative; /* لتحديد مكان زر المسح داخل الآلة */
+        }
+        #display {
+            width: 100%;
+            padding: 20px;
+            font-size: 26px;
+            text-align: right;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            background-color: #f0f0f0;
+            color: #333;
+            min-height: 60px;
+            box-sizing: border-box;
+        }
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 20px;
+            font-size: 22px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:active {
+            background-color: #388e3c;
+        }
+        .operator {
+            background-color: #f39c12;
+        }
+        .operator:hover {
+            background-color: #e67e22;
+        }
+        .backspace {
+            background-color: #f44336;
+        }
+        .backspace:hover {
+            background-color: #e74c3c;
+        }
+        .equal {
+            background-color: #2196F3;
+            grid-column: span 4; /* لزيادة عرض الزر */
+        }
+        .clear {
+            background-color: #FF6347;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            color: white;
+            border: none;
+        }
+        .clear:hover {
+            background-color: #e74c3c;
+        }
+        .parentheses {
+            background-color: #9b59b6;
+        }
+        .parentheses:hover {
+            background-color: #8e44ad;
+        }
+        .square-root {
+            background-color: #2980b9;
+        }
+        .square-root:hover {
+            background-color: #3498db;
+        }
+
+        /* تغيير لون الأزرار عند الضغط */
+        button:active {
+            background-color: #3498db; /* عند الضغط، سيكون اللون أزرق */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <input type="text" id="display" disabled placeholder="0">
+        <div class="button-container">
+            <button onclick="appendNumber(7)">7</button>
+            <button onclick="appendNumber(8)">8</button>
+            <button onclick="appendNumber(9)">9</button>
+            <button class="operator" onclick="calculate('divide')">÷</button>
+
+            <button onclick="appendNumber(4)">4</button>
+            <button onclick="appendNumber(5)">5</button>
+            <button onclick="appendNumber(6)">6</button>
+            <button class="operator" onclick="calculate('multiply')">×</button>
+
+            <button onclick="appendNumber(1)">1</button>
+            <button onclick="appendNumber(2)">2</button>
+            <button onclick="appendNumber(3)">3</button>
+            <button class="operator" onclick="calculate('subtract')">-</button>
+
+            <button onclick="appendNumber(0)">0</button>
+            <button class="backspace" onclick="backspace()">←</button>
+            <button class="parentheses" onclick="appendParentheses('(')">(</button>
+            <button class="operator" onclick="calculate('add')">+</button>
+        </div>
+        <div class="button-container">
+            <button onclick="appendParentheses(')')">)</button>
+            <button class="square-root" onclick="calculateSquareRoot()">√</button>
+            <button class="equal" onclick="calculateResult()">=</button>
+        </div>
+
+        <!-- زر المسح الكلي داخل الآلة الحاسبة في الزاوية العليا -->
+        <button class="clear" onclick="clearDisplay()">C</button>
+    </div>
+
+    <script>
+        let currentInput = "";
+        let previousInput = "";
+        let operator = null;
+
+        // لإضافة الأرقام إلى العرض
+        function appendNumber(number) {
+            currentInput += number;
+            document.getElementById("display").value = currentInput;
+        }
+
+        // لإضافة القوسين
+        function appendParentheses(paren) {
+            currentInput += paren;
+            document.getElementById("display").value = currentInput;
+        }
+
+        // لتحديد العملية الحسابية
+        function calculate(op) {
+            if (currentInput === "") return;
+            if (previousInput !== "") {
+                calculateResult();
+            }
+            operator = op;
+            previousInput = currentInput;
+            currentInput = "";
+            document.getElementById("display").value = previousInput + " " + getOperatorSymbol(op);
+        }
+
+        // لحساب النتيجة بناءً على المدخلات
+        function calculateResult() {
+            let result;
+            const num1 = parseFloat(previousInput);
+            const num2 = parseFloat(currentInput);
+
+            if (isNaN(num1) || isNaN(num2)) return;
+
+            switch (operator) {
+                case 'add':
+                    result = num1 + num2;
+                    break;
+                case 'subtract':
+                    result = num1 - num2;
+                    break;
+                case 'multiply':
+                    result = num1 * num2;
+                    break;
+                case 'divide':
+                    if (num2 === 0) {
+                        result = "خطأ: القسمة على صفر غير ممكنة";
+                    } else {
+                        result = num1 / num2;
+                    }
+                    break;
+                default:
+                    return;
+            }
+
+            currentInput = result.toString();
+            operator = null;
+            previousInput = "";
+            document.getElementById("display").value = result;
+        }
+
+        // لحساب الجذر التربيعي
+        function calculateSquareRoot() {
+            const num = parseFloat(currentInput);
+            if (isNaN(num)) return;
+            currentInput = Math.sqrt(num).toString();
+            document.getElementById("display").value = currentInput;
+        }
+
+        // لإرجاع الرقم الأخير
+        function backspace() {
+            currentInput = currentInput.slice(0, -1);
+            document.getElementById("display").value = currentInput;
+        }
+
+        // لمسح العرض
+        function clearDisplay() {
+            currentInput = "";
+            previousInput = "";
+            operator = null;
+            document.getElementById("display").value = "0";
+        }
+
+        // للحصول على الرمز الخاص بالعملية
+        function getOperatorSymbol(op) {
+            switch (op) {
+                case 'add':
+                    return '+';
+                case 'subtract':
+                    return '-';
+                case 'multiply':
+                    return '×';
+                case 'divide':
+                    return '÷';
+                default:
+                    return '';
+            }
+        }
+    </script>
+
+</body>
+</html>
